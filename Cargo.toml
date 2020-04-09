@@ -1,5 +1,5 @@
 [package]
-name = "FOxSearch"
+name = "fox_search"
 version = "0.1.0"
 authors = ["Jordan Bergmann"]
 edition = "2018"
