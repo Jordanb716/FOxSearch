@@ -64,12 +64,18 @@ fn path_handler(path: PathBuf, regex: Box<Regex>) -> Vec<RegexResult> {
         let file_contents = fs::read_to_string(&path).expect("File read error!");
         let results = regex.find_iter(&file_contents);
         for hit in results {
-            let sentence_start = file_contents[..hit.start()]
-                .rfind("\n")
-                .expect("Failed finding start of sentence.");
+            let sentence_start = file_contents[..hit.start()].rfind("\n").unwrap_or(0);
             let sentence_end = file_contents[hit.end()..]
                 .find("\n")
-                .expect("Failed finding end of sentence.");
+                .unwrap_or(file_contents.len() - hit.end())
+                + hit.end();
+            println!(
+                "path: {:?}, SE: {}, HE: {}, Word: {}",
+                path,
+                sentence_end,
+                hit.end(),
+                hit.as_str()
+            );
             let packed_result = RegexResult {
                 path: path.clone(),
                 line: file_contents[0..hit.start()].matches("\n").count(),
