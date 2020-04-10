@@ -34,8 +34,9 @@ fn main() {
 
     for hit in search_results {
         println!(
-            "At {:?} found {:20}-{}-{}",
+            "At {:?} line {} found {}-{}-{}",
             hit.path,
+            hit.line,
             &hit.sentence[..hit.start],
             &hit.sentence[hit.start..hit.end],
             &hit.sentence[hit.end..]
