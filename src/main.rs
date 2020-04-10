@@ -52,15 +52,18 @@ fn path_handler(path: PathBuf, regex: Box<Regex>) -> Vec<RegexResult> {
     if path.is_dir() {
         println!("{:?} is a directory!", path);
         let entries = fs::read_dir(path).expect("Failed to read directory!");
+        let mut thread_handles: Vec<thread::JoinHandle<Vec<RegexResult>>> = Vec::new();
         for entry in entries {
             let dir_path = entry.expect("Failed to read directory entry!").path();
             let regex_copy = regex.clone();
-            let thread_handle = thread::spawn(move || {
+            thread_handles.push(thread::spawn(move || {
                 return path_handler(dir_path, regex_copy);
-            });
-            let mut directory_hits = thread_handle.join().expect("Thread expired unexpectedly!");
-            search_results.append(&mut directory_hits);
+            }));
         }
+        for thread in thread_handles {
+        let mut directory_hits = thread.join().expect("Thread expired unexpectedly!");
+        search_results.append(&mut directory_hits);
+    }
     } else {
         let file_contents = fs::read_to_string(&path).expect("File read error!");
         let results = regex.find_iter(&file_contents);
