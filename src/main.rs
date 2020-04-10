@@ -61,9 +61,9 @@ fn path_handler(path: PathBuf, regex: Box<Regex>) -> Vec<RegexResult> {
             }));
         }
         for thread in thread_handles {
-        let mut directory_hits = thread.join().expect("Thread expired unexpectedly!");
-        search_results.append(&mut directory_hits);
-    }
+            let mut directory_hits = thread.join().expect("Thread expired unexpectedly!");
+            search_results.append(&mut directory_hits);
+        }
     } else {
         let file_contents = fs::read_to_string(&path).expect("File read error!");
         let results = regex.find_iter(&file_contents);
