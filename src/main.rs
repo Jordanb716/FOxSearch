@@ -72,7 +72,7 @@ fn path_handler(path: PathBuf, regex: Box<Regex>) -> Vec<RegexResult> {
                 + hit.end();
             let packed_result = RegexResult {
                 path: path.clone(),
-                line: file_contents[0..hit.start()].matches("\n").count(),
+                line: file_contents[..hit.start()].matches("\n").count() + 1,
                 start: hit.start() - sentence_start,
                 end: hit.end() - sentence_start,
                 sentence: file_contents[sentence_start..sentence_end].to_string(),
