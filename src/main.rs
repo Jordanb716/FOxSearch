@@ -69,18 +69,11 @@ fn path_handler(path: PathBuf, regex: Box<Regex>) -> Vec<RegexResult> {
                 .find("\n")
                 .unwrap_or(file_contents.len() - hit.end())
                 + hit.end();
-            println!(
-                "path: {:?}, SE: {}, HE: {}, Word: {}",
-                path,
-                sentence_end,
-                hit.end(),
-                hit.as_str()
-            );
             let packed_result = RegexResult {
                 path: path.clone(),
                 line: file_contents[0..hit.start()].matches("\n").count(),
                 start: hit.start() - sentence_start,
-                end: sentence_end - hit.end(),
+                end: hit.end() - sentence_start,
                 sentence: file_contents[sentence_start..sentence_end].to_string(),
             };
             search_results.push(packed_result);
